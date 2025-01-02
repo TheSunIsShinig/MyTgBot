@@ -13,12 +13,15 @@ To install Project Title, follow these steps:
 3. Build the project using Maven: **`mvn clean install`**
 4. Run the application: **`java -jar target/MyTgBot-1.0.0.jar`**
 
+**Note:** Make sure you have Java 8+ and Maven installed on your system.
+
 ## **Usage**
 
 1. Open the project in your favorite IDE
 2. Configure application settings if needed
 3. Build the project using Maven: **`mvn clean install`**
 4. Run the application: **`java -jar target/MyTgBot-1.0.0.jar`**
+5. Interact with the bot via Telegram to search for cars or get weather information.
 
 ## **Contributing**
 

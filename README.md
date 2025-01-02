@@ -39,4 +39,4 @@ Project Title was created by **[Dmytro](https://github.com/TheSunIsShinig)**.
 
 ## **Contact**
 
-If you have any questions or comments about Project Title, please contact **[Dmytro](dimasavin2003@gmail.com)**.
+If you have any questions or comments about Project Title, please contact **[Dmytro](mailto:dimasavin2003@gmail.com)**.

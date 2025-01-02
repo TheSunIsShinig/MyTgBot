@@ -35,7 +35,7 @@ If you'd like to contribute to Project Title, here are some guidelines:
 
 ## **Author**
 
-Project Title was created by **[Dmytro](https://github.com/TheSunIsShining)**. 
+Project Title was created by **[Dmytro](https://github.com/TheSunIsShinig)**. 
 
 ## **Contact**
 

@@ -1,9 +1,12 @@
-package org.example.service;
+package org.example.helper;
 
 import org.example.model.CarDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Component
 public class CarDetailsProcessor {
 
     public String getCarDetailsString(Long chatId, Map<Long, CarDetails> carDetailsMap) {

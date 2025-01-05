@@ -3,10 +3,17 @@ package org.example.service;
 import org.example.constant.Buttons;
 import org.example.constant.Constants;
 import org.example.constant.UserState;
+import org.example.helper.AutoRiaParser;
+import org.example.helper.CarDetailsProcessor;
+import org.example.helper.CarStorage;
+import org.example.helper.MessageSender;
 import org.example.model.AutoRiaCars;
+//import org.example.model.BotUser;
 import org.example.model.CarDetails;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.example.repository.CarDetailsRepository;
+//import org.example.repository.UserRepository;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.sender.SilentSender;
@@ -17,34 +24,34 @@ import java.util.List;
 import java.util.Map;
 
 import static org.example.constant.Constants.*;
-import static org.example.constant.UserState.*;
+import static org.example.constant.UserState.AWAITING_CHANGE;
+import static org.example.constant.UserState.PARAMETERS;
 
+@Component
+public class CarService {
 
-@Service
-public class Replies {
-
-    private Map<Long, CarDetails> carDetailsMap = new HashMap<>();
+//    private CarDetailsRepository carDetailsRepository;
+//    private UserRepository userRepository;
     private final CarDetails carDetails = new CarDetails();
+    private Map<Long, CarDetails> carDetailsMap = new HashMap<>();
     private final CarStorage carStorage = new CarStorage();
     private final CarDetailsProcessor carDetailsProcessor = new CarDetailsProcessor();
-    private final Buttons buttons = new Buttons();
     private final AutoRiaParser autoRiaParser = new AutoRiaParser();
+    private final Buttons buttons = new Buttons();
 
-    private final MessageSender messageSender;
     private final Map<Long, UserState> chatStates;
     private final Map<Long, UserState> carSetCallData;
+    private final MessageSender messageSender;
 
-    @Autowired
-    public Replies(@Lazy SilentSender sender, DBContext db) {
+    public CarService(@Lazy SilentSender sender, DBContext db){
+        messageSender = new MessageSender(sender);
         chatStates = db.getMap(Constants.CHAT_STATES);
         carSetCallData = db.getMap(Constants.CAR_SET_DATA);
-        messageSender = new MessageSender(sender);
     }
 
-    public void toName(long chatId, Message message) {
-        messageSender.sendMessage(chatId,
-                "Hello " + message.getText() + "\nWrite the parameters of the machine\n" +
-                "Brand, Model, StartPrice, EndPrice, StartYear, EndYear");
+    //
+    public void toName(long chatId) {
+        messageSender.sendMessage(chatId, PARAMETERS_TEXT);
         chatStates.put(chatId,PARAMETERS);
     }
 
@@ -61,6 +68,12 @@ public class Replies {
         carStorage.saveCarDetails(carDetailsMap);
 
         chatStates.remove(chatId);
+
+//        //
+//        BotUser user = userRepository.findById(chatId).orElseThrow(() -> new RuntimeException("User not found"));
+//        carDetails.setBotUser(user);
+//        carDetailsRepository.save(carDetails);
+//        //
 
         messageSender.sendMessage(chatId, carDetailsProcessor.getCarDetailsString(chatId, carDetailsMap));
         messageSender.sendMessageWithKeyboard(chatId, YES_NO, buttons.YesNoButtons());
@@ -81,7 +94,7 @@ public class Replies {
 
     public void toChangeMessage(long chatId, String callbackData){
         messageSender.sendMessage(chatId, "write "+ callbackData);
-        carSetCallData.put(chatId,UserState.fromCallbackData(callbackData));
+        carSetCallData.put(chatId, UserState.fromCallbackData(callbackData));
     }
 
     public void toChangeParameters(long chatId,  Message message){
@@ -100,22 +113,8 @@ public class Replies {
         chatStates.remove(chatId);
     }
 
-    public void toStart(long chatId) {
-        messageSender.sendMessage(chatId,START_TEXT);
-        chatStates.put(chatId, AWAITING_NAME);
-    }
-
-    public void stopChat(long chatId) {
-        messageSender.sendMessage(chatId, STOP_TEXT);
-        chatStates.remove(chatId);
-    }
-
-    public void toShow(long chatId){
+    public void carDetails(long chatId){
         carDetailsMap = carStorage.loadCarDetails();
         messageSender.sendMessage(chatId, carDetailsProcessor.getCarDetailsString(chatId, carDetailsMap));
-    }
-
-    public void unexpectedMessage(long chatId) {
-        messageSender.sendMessage(chatId, UNEXPECTED_MESSAGE);
     }
 }

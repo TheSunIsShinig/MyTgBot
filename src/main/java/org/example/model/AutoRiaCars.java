@@ -20,15 +20,15 @@ public class AutoRiaCars {
 
     @Override
     public String toString() {
-        return  "Name: " + mark + " " + model + "\n" +
-                "Price: " + price + "\n" +
-                "Year: " + year + "\n" +
-                "Mileage: " + mileage + "\n" +
-                "Region: " + region + "\n" +
-                "FuelType: " + fuelType + "\n" +
+        return  "Name: "        + mark + " " + model + "\n" +
+                "Price: "       + price       + "\n" +
+                "Year: "        + year        + "\n" +
+                "Mileage: "     + mileage     + "\n" +
+                "Region: "      + region      + "\n" +
+                "FuelType: "    + fuelType    + "\n" +
                 "GearBoxType: " + gearBoxType + "\n" +
                 "Description: " + description + "\n" +
-                "Date: " +  date +"\n" +
-                "Link: " + link;
+                "Date: "        + date        +"\n" +
+                "Link: "        + link;
     }
 }

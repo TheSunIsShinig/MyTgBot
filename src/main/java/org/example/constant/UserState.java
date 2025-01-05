@@ -2,7 +2,7 @@ package org.example.constant;
 
 
 public enum UserState {
-    AWAITING_NAME,
+    AWAITING_CITY,
     PARAMETERS,
     AWAITING_CHANGE,
     REGION_SET,

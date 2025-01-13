@@ -1,6 +1,6 @@
 package org.example.constant;
 
-public class Constants {
+public class TextField {
     public static final String CHAT_STATES = "chatStates";
     public static final String CAR_SET_DATA = "carSet";
 
@@ -22,7 +22,7 @@ public class Constants {
     public static final String CHANGE_PARAMETERS = "Click on the one you want to change";
     public static final String PARAMETERS_TEXT = """
                                                  Write the parameters of the machine
-                                                 Brand, Model, StartPrice, EndPrice, StartYear, EndYear
+                                                 Brand, Model, StartYear, EndYear, StartPrice, EndPrice,
                                                  """;
     public static final String SET_CITY_TEXT = """
                                                To receive information about the weather

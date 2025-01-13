@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.function.BiConsumer;
 
-import static org.example.constant.Constants.START_DESCRIPTION;
+import static org.example.constant.TextField.START_DESCRIPTION;
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
 @Component
@@ -94,21 +94,6 @@ public class MyMegaBotPro extends AbilityBot {
             }
         };
         return Reply.of(action, Flag.CALLBACK_QUERY, Update::hasCallbackQuery);
-    }
-
-
-    @Override
-    public void onUpdateReceived(Update update) {
-        super.onUpdateReceived(update);
-        System.out.println("Received update: " + update);
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            String messageText = update.getMessage().getText();
-            System.out.println("Message text: " + messageText);
-            if (messageText.equals("/start")) {
-                // Відправити відповідь на команду /start
-                System.out.println(update.getMessage().getChatId().toString() + " Bot is active!");
-            }
-        }
     }
 
     @Override

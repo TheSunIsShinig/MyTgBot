@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import org.example.constant.Constants;
+import org.example.constant.TextField;
 import org.example.constant.UserState;
 import org.example.service.AbilityService;
 import org.example.service.CarService;
@@ -26,7 +26,7 @@ public class ResponseHandler {
         repliesService = new AbilityService(sender, db);
         carService = new CarService(sender, db);
         weatherService = new WeatherService(sender, db);
-        chatStates = db.getMap(Constants.CHAT_STATES);
+        chatStates = db.getMap(TextField.CHAT_STATES);
     }
 
     public void replyToText(long chatId, Message message) {
@@ -35,7 +35,7 @@ public class ResponseHandler {
         }
 
         switch (chatStates.get(chatId)) {
-            case PARAMETERS -> carService.toParameters(chatId, message);
+            case PARAMETERS -> carService.toParametersParse(chatId, message);
             case AWAITING_CHANGE -> carService.toChangeParameters(chatId, message);
             case AWAITING_CITY -> weatherService.getWeatherDetails(chatId, message);
             default -> repliesService.unexpectedMessage(chatId);
@@ -46,7 +46,7 @@ public class ResponseHandler {
         switch(callbackData){
             case "Yes" -> carService.toYesCall(chatId);
             case "No" -> carService.toChangeCall(chatId);
-            case "Cars" -> carService.toName(chatId);
+            case "Cars" -> carService.toParametersText(chatId);
             case "Weather" -> weatherService.setCityMessage(chatId);
             default -> carService.toChangeMessage(chatId, callbackData);
         }

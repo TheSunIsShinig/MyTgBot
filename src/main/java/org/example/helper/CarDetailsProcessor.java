@@ -2,7 +2,6 @@ package org.example.helper;
 
 import org.example.model.CarDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 

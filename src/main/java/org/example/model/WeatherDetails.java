@@ -23,9 +23,9 @@ public class WeatherDetails {
                 "Description: " + description +        "\n" +
                 "Temperature: " + temp        + "°C" + "\n" +
                 "Feels like: "  + feelsLike   + "°C" + "\n" +
-                "Humidity: "    + humidity    + "%"  + "\n" +
-                "Pressure: "    + pressure    + "%"  + "\n" +
-                "Visibility: "  + visibility  + "%"  + "\n" +
+                "Humidity: "    + humidity    + "%"  +"\n" +
+                "Pressure: "    + pressure    + "\n" +
+                "Visibility: "  + visibility  + "\n" +
                 "Wind speed: "  + windSpeed;
     }
 }

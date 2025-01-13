@@ -1,13 +1,12 @@
 package org.example.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.constant.Constants;
+import org.example.constant.TextField;
 import org.example.constant.UserState;
 import org.example.helper.MessageSender;
 import org.example.model.WeatherDetails;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -20,7 +19,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
 
-import static org.example.constant.Constants.SET_CITY_TEXT;
+import static org.example.constant.TextField.SET_CITY_TEXT;
 import static org.example.constant.UserState.AWAITING_CITY;
 
 @Component
@@ -33,7 +32,7 @@ public class WeatherService {
 
     public WeatherService(@Lazy SilentSender sender, DBContext db){
         messageSender = new MessageSender(sender);
-        chatStates = db.getMap(Constants.CHAT_STATES);
+        chatStates = db.getMap(TextField.CHAT_STATES);
     }
 
     private String buildURL(Message message){

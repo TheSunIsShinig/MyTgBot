@@ -8,8 +8,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class SpringBootTelegramApplication {
 
     public static void main(String[] args) {
-        System.out.println("Starting Spring Boot application...");
         ConfigurableApplicationContext ctx = SpringApplication.run(SpringBootTelegramApplication.class, args);
-        System.out.println("Starting Spring Boot application...");
     }
 }

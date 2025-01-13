@@ -1,45 +1,54 @@
 package org.example.controller;
 
-import org.example.constant.Constants;
+import org.example.constant.TextField;
 import org.example.constant.UserState;
-import org.example.service.Replies;
+import org.example.service.AbilityService;
+import org.example.service.CarService;
+import org.example.service.WeatherService;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Map;
+import java.util.Objects;
 
-@Controller
+@Component
 public class ResponseHandler {
 
+    private final WeatherService weatherService;
+    private final AbilityService repliesService;
+    private final CarService carService;
     protected final Map<Long, UserState> chatStates;
-    private final Replies reply;
 
     public ResponseHandler(@Lazy SilentSender sender, DBContext db){
-        this.reply = new Replies(sender, db);
-        chatStates = db.getMap(Constants.CHAT_STATES);
+        repliesService = new AbilityService(sender, db);
+        carService = new CarService(sender, db);
+        weatherService = new WeatherService(sender, db);
+        chatStates = db.getMap(TextField.CHAT_STATES);
     }
 
-    public void replyToButtons(long chatId, Message message) {
-        if (message.getText().equalsIgnoreCase("/stop")) {
-            reply.stopChat(chatId);
+    public void replyToText(long chatId, Message message) {
+        if(Objects.equals(message.getText(), "/stop")){
+            repliesService.stopChat(chatId);
         }
 
         switch (chatStates.get(chatId)) {
-            case AWAITING_NAME -> reply.toName(chatId, message);
-            case PARAMETERS -> reply.toParameters(chatId, message);
-            case AWAITING_CHANGE -> reply.toChangeParameters(chatId, message);
-            default -> reply.unexpectedMessage(chatId);
+            case PARAMETERS -> carService.toParametersParse(chatId, message);
+            case AWAITING_CHANGE -> carService.toChangeParameters(chatId, message);
+            case AWAITING_CITY -> weatherService.getWeatherDetails(chatId, message);
+            default -> repliesService.unexpectedMessage(chatId);
         }
     }
 
     public void replyToCallBackData(long chatId, String callbackData, Message message ) throws Exception {
         switch(callbackData){
-            case "Yes" -> reply.toYesCall(chatId);
-            case "No" -> reply.toChangeCall(chatId);
-            default -> reply.toChangeMessage(chatId, callbackData);
+            case "Yes" -> carService.toYesCall(chatId);
+            case "No" -> carService.toChangeCall(chatId);
+            case "Cars" -> carService.toParametersText(chatId);
+            case "Weather" -> weatherService.setCityMessage(chatId);
+            default -> carService.toChangeMessage(chatId, callbackData);
         }
     }
 

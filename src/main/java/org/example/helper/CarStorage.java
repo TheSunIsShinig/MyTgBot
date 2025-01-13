@@ -1,13 +1,15 @@
-package org.example.service;
+package org.example.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.model.CarDetails;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class CarStorage {
     private static final String FILE_NAME = "data/UserCarFilter/carDetails.json"; // Файл для зберігання даних
     private final ObjectMapper objectMapper;

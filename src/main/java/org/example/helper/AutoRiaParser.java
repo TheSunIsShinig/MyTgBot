@@ -1,60 +1,34 @@
-package org.example.service;
+package org.example.helper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.Setter;
 import org.example.model.AutoRiaCars;
 import org.example.model.CarDetails;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Component
 public class AutoRiaParser {
 
     private static final String BASE_URL = "https://auto.ria.com/uk/search/";
 
-    static class parameter {
-        @Getter @Setter private String name;
-        @Getter @Setter private String value;
-    }
-
-    public static String getParamID(String param, String typeParam) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        List<parameter> BrandID = null;
-        try {
-            BrandID = objectMapper.readValue(new File( "data/AutoRiaID/"+typeParam+".json"),
-                        objectMapper.getTypeFactory().constructCollectionType(List.class, parameter.class));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        for (parameter brand : BrandID) {
-            if (brand.getName().equalsIgnoreCase(param)) {
-                return brand.getValue();
-            }
-        }
-        return null;
-    }
-
     private String buildUrl(long chatId, Map<Long, CarDetails> carDetailsMap) {
         CarDetails details = carDetailsMap.get(chatId);
+        ParameterID parameterID = new ParameterID();
         StringBuilder urlBuilder = new StringBuilder(BASE_URL);
         return urlBuilder.append("?categories.main.id=1")
                          .append("&price.currency=1")
                          .append("&price.USD.gte=").append(details.getStartPrice())
                          .append("&price.USD.lte=").append(details.getEndPrice())
                          .append("&indexName=auto,order_auto,newauto_search&region.id[0]=10")
-                         .append("&brand.id[0]=").append(getParamID(details.getBrand(), "brand"))
-                         .append("&model.id[0]=").append(getParamID(details.getModel(), "model"))
+                         .append("&brand.id[0]=").append(parameterID.getBrandID(details.getBrand()))
+                         .append("&model.id[0]=").append(parameterID.getModelID(details.getBrand(), details.getModel()))
                          .append("&year[0].gte=").append(details.getStartYear())
                          .append("&year[0].lte=").append(details.getEndYear())
                          .append("&size=5")
@@ -100,15 +74,16 @@ public class AutoRiaParser {
             Element gearBoxTypeElement = car.selectFirst("li.item-char:has(i.icon-transmission)");
             String gearBoxType = gearBoxTypeElement != null ? gearBoxTypeElement.ownText().trim() : "The type of gearbox is not specified";
 
-            //description
+            //Description
             Element descriptionElement = car.selectFirst("p.descriptions-ticket");
             String description = descriptionElement != null ? descriptionElement.text() : "there is no description";
 
-            //link
-            String link = car.select(".ticket-title a").attr("href");
-
+            //Date
             Element addDataElement = car.selectFirst(".footer_ticket span[data-add-date]");
             String addDate = addDataElement != null ? addDataElement.attr("data-add-date") : "noData";
+
+            //link
+            String link = car.select(".ticket-title a").attr("href");
 
             cars.add(new AutoRiaCars(mark, model, price, year, mileage, region, fuelType, gearBoxType, description, addDate, link));
         }

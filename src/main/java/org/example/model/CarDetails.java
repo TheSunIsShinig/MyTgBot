@@ -8,6 +8,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CarDetails {
+
     @Getter @Setter private String brand;
     @Getter @Setter private String model;
     @Getter @Setter private String startYear;
@@ -17,11 +18,11 @@ public class CarDetails {
 
     @Override
     public String toString() {
-        return  "Brand: " + brand +
-                "Model: " + model + "\n" +
-                "StartYear: " + startYear + "\n" +
-                "EndYear: " + endYear + "\n" +
+        return  "Brand: "      + brand      +
+                "Model: "      + model      + "\n" +
+                "StartYear: "  + startYear  + "\n" +
+                "EndYear: "    + endYear    + "\n" +
                 "StartPrice: " + startPrice + "\n" +
-                "EndPrice: " + endPrice ;
+                "EndPrice: "   + endPrice;
     }
 }

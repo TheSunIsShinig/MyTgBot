@@ -1,7 +1,7 @@
 package org.example.bot;
 
 import org.example.controller.ResponseHandler;
-import org.example.service.Replies;
+import org.example.service.AbilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,21 +12,21 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.function.BiConsumer;
 
-import static org.example.constant.Constants.START_DESCRIPTION;
+import static org.example.constant.TextField.START_DESCRIPTION;
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
 @Component
 public class MyMegaBotPro extends AbilityBot {
 
     private final ResponseHandler responseHandler;
-    private final Replies reply;
+    private final AbilityService abilityService;
 
     @Autowired
     public MyMegaBotPro(@Value("${botToken}") String botToken,
-                        @Value("${botName}") String botName) {
+                        @Value("${botUsername}") String botName) {
         super(botToken, botName);
-        this.reply = new Replies(silent, db);
-        this.responseHandler = new ResponseHandler(silent, db);
+        responseHandler = new ResponseHandler(silent, db);
+        abilityService = new AbilityService(silent, db);
     }
 
     public Ability start(){
@@ -36,7 +36,7 @@ public class MyMegaBotPro extends AbilityBot {
                 .info(START_DESCRIPTION)
                 .locality(Locality.USER)
                 .privacy(Privacy.PUBLIC)
-                .action(ctx ->  reply.toStart(ctx.chatId()))
+                .action(ctx ->  abilityService.toStart(ctx.chatId(), ctx.user()))
                 .build();
     }
 
@@ -47,7 +47,7 @@ public class MyMegaBotPro extends AbilityBot {
                 .info("stop chat")
                 .locality(Locality.USER)
                 .privacy(Privacy.PUBLIC)
-                .action(ctx ->  reply.stopChat(ctx.chatId()))
+                .action(ctx ->  abilityService.stopChat(ctx.chatId()))
                 .build();
     }
 
@@ -58,7 +58,7 @@ public class MyMegaBotPro extends AbilityBot {
                 .info("change parameters")
                 .locality(Locality.USER)
                 .privacy(Privacy.PUBLIC)
-                .action(ctx ->  reply.toChangeCall(ctx.chatId()))
+                .action(ctx ->  abilityService.toChange(ctx.chatId()))
                 .build();
     }
 
@@ -69,13 +69,13 @@ public class MyMegaBotPro extends AbilityBot {
                 .info("show parameters")
                 .locality(Locality.USER)
                 .privacy(Privacy.PUBLIC)
-                .action(ctx ->  reply.toShow(ctx.chatId()))
+                .action(ctx ->  abilityService.toShow(ctx.chatId()))
                 .build();
     }
 
-    public Reply replyToButtons() {
+    public Reply replyToText() {
         BiConsumer<BaseAbilityBot, Update> action = (abilityBot, upd) ->
-                responseHandler.replyToButtons(
+                responseHandler.replyToText(
                         getChatId(upd),
                         upd.getMessage());
         return Reply.of(action, Flag.TEXT, upd -> responseHandler.userIsActive(getChatId(upd)));
